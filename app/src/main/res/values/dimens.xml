@@ -1,0 +1,10 @@
+<resources>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="title_text">25sp</dimen>
+    <dimen name="normal_text">16sp</dimen>
+    <dimen name="small_title_text">20sp</dimen>
+    <dimen name="border_radius">16dp</dimen>
+    <dimen name="border_thiccness">2dp</dimen>
+    <dimen name="pill_border_radius">25dp</dimen>
+    <dimen name="normal_padding">25dp</dimen>
+</resources>
