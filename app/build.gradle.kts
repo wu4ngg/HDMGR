@@ -8,12 +8,11 @@ android {
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.hdmgr"
+        applicationId = "app.forwardslash.hdmgr"
         minSdk = 28
         targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
-
+        versionCode = 2
+        versionName = "1.1.300424_1354a"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 

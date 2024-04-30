@@ -5,6 +5,7 @@ import com.example.hdmgr.classes.Folder
 import com.example.hdmgr.classes.Receipt
 import java.lang.Exception
 import java.text.SimpleDateFormat
+import java.util.Date
 import java.util.Locale
 
 class CursorManager {
@@ -15,11 +16,11 @@ class CursorManager {
             while (cursor.moveToNext()){
                 try {
                     val dateStringHd = cursor.getString(2)
-                    val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US)
-                    val date = formatter.parse(dateStringHd)
+                    receipt.fullDateString = dateStringHd
+                    val date = convertToDate(dateStringHd)
                     receipt = Receipt(cursor.getInt(0), cursor.getString(1), date, cursor.getString(4), cursor.getInt(3))
                     val dateStringFd = cursor.getString(8)
-                    val dateFd = formatter.parse(dateStringFd)
+                    val dateFd = convertToDate(dateStringFd)
                     val folder: Folder = Folder(cursor.getInt(6), cursor.getString(7), dateFd)
                     receipt.folder = folder
                     arr.add(receipt)
@@ -29,6 +30,18 @@ class CursorManager {
                 }
             }
             cursor.close()
+            return arr
+        }
+        private fun convertToDate(dateString: String): Date?{
+            val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US)
+            return formatter.parse(dateString)
+        }
+        fun convertToFolderArray(cursor: Cursor): ArrayList<Folder>{
+            val arr: ArrayList<Folder> = ArrayList()
+            while (cursor.moveToNext()){
+                val date = convertToDate(cursor.getString(2))
+                arr.add(Folder(cursor.getInt(0), cursor.getString(1), date))
+            }
             return arr
         }
     }

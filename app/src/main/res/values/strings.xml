@@ -59,4 +59,14 @@
     <string name="dialog_yes">OK</string>
     <string name="dialog_no">Huỷ</string>
     <string name="folder_placeholder">Tất cả thư mục</string>
+    <string name="add_rec">Thêm hoá đơn</string>
+    <string name="add_rec_name">Tên hoá đơn</string>
+    <string name="add_rec_content">Nội dung</string>
+    <string name="add_rec_money">Số tiền</string>
+    <string name="choose_folder_placeholder">Chọn thư mục</string>
+    <string name="placeholder_id">#%1$d</string>
+    <string name="placeholder_maso">mã số #%1$d</string>
+    <string name="dialog_filter">Lọc hoá đơn</string>
+    <string name="from_date">Từ ngày</string>
+    <string name="to_date">Đến ngày</string>
 </resources>

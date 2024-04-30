@@ -7,6 +7,7 @@ class Receipt(
     var title: String? = "",
     var ngay: Date? = Date(),
     var noidung: String? = "",
+    var fullDateString: String = ""
 ) {
     lateinit var folder: Folder
     var soTien: Int = 0
@@ -15,7 +16,7 @@ class Receipt(
                 0
             } else value
         }
-    constructor(id: Int, title: String, ngay: Date, noidung: String, soTien: Int) : this(id, title, ngay, noidung){
+    constructor(id: Int, title: String, ngay: Date?, noidung: String, soTien: Int) : this(id, title, ngay, noidung){
         this.soTien = soTien;
     }
 }
