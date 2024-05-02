@@ -11,6 +11,11 @@
 ## Tiến độ
 25% - Dọn sạch bug tồn động, tạm thời xong CRUD của các hoá đơn (trừ phần cập nhật)
 ## Changelog
+Ý nghĩa ~~các màu hoa bỉ ngạn~~ các phiên bản: 
+- 1.x.x.ddMMyy_hhmmx - Very early development (còn đang được phát triển trong giai đoạn sớm)
+- 2.x.x.ddMMyy_hhmmx - Alpha
+- 3.x.x.ddMMyy_hhmmx - Beta
+- 4.x.x.ddMMyy_hhmmx - Release
 ### very_early_dev_1.1.300424_1354b 
 - Sửa nhiều lỗi liên quan đến hành vi của RecyclerView gây crash ứng dụng.
   - Lỗi crash khi thêm hoá đơn vào trang rỗng.
