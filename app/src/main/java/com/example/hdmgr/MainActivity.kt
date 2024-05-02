@@ -14,6 +14,7 @@ import androidx.core.widget.addTextChangedListener
 import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.hdmgr.adapters.OnActionFinished
 import com.example.hdmgr.adapters.ReceiptAdapter
 import com.example.hdmgr.classes.Receipt
 import com.example.hdmgr.databinding.ActivityMainBinding
@@ -58,6 +59,7 @@ class MainActivity : AppCompatActivity() {
         rcvRec = binding.rcvItems
         changeToMonthlyData()
         rcvRec.layoutManager = layoutManager
+
         //layout stuff (for the dropdown menus)
         binding.timeSelector.setOnClickListener {
             var curOffset = 0;
@@ -91,10 +93,15 @@ class MainActivity : AppCompatActivity() {
             uploadDialog = UploadDialog(this)
             uploadDialog.setOnUploadFinishedListener(object : OnUploadFinished{
                 override fun onFinished(receipt: Receipt) {
+                    if(recArr.size != 0){
+                        recArr.add(0, receipt)
+                        receiptAdapter.notifyItemInsertedAndRevalidate(0)
+                        rcvRec.scrollToPosition(0)
+                    } else {
+                        recArr.add(0, receipt)
+                        receiptAdapter.notifyItemChanged(0)
+                    }
                     //upload finished
-                    recArr.add(0, receipt)
-                    receiptAdapter.notifyItemInsertedAndRevalidate(0)
-                    rcvRec.scrollToPosition(0)
                     refreshRecyclerView(count = numCount + 1, moneyCount = moneyCount + receipt.soTien, alsoUpdateAdapter = false)
                     Toast.makeText(applicationContext, "Đăng tải thành công!", Toast.LENGTH_SHORT).show()
                 }
@@ -142,6 +149,11 @@ class MainActivity : AppCompatActivity() {
         numCount = count
         this.moneyCount = moneyCount
         if(alsoUpdateAdapter){
+            adapter.setOnDeleteFinishedListener(object : OnActionFinished{
+                override fun onFinished(receipt: Receipt) {
+                    refreshRecyclerView(count = numCount - 1, moneyCount = moneyCount - receipt.soTien, alsoUpdateAdapter = false)
+                }
+            })
             if(rcvRec.adapter == null || recreateAdapter){
                 rcvRec.adapter = adapter
                 layoutManager = object : LinearLayoutManager(this){
@@ -150,11 +162,13 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
                 rcvRec.layoutManager = layoutManager
+
             } else {
                 rcvRec.adapter = adapter
                 receiptAdapter = adapter
                 rcvRec.adapter!!.notifyItemRangeChanged(0, receiptAdapter.itemCount)
             }
+
         }
 
         val formatter = DecimalFormat("#,###.##")
@@ -165,6 +179,10 @@ class MainActivity : AppCompatActivity() {
             sumMoneyDateLabel.text = resources.getString(R.string.sum_money_date, "")
         }
         Log.d("D", "Done")
+    }
+    //search data
+    private fun switchToSearchData(query: String){
+
     }
     //monthly data (with optional calendar parameter)
     private fun prepareMonthlyData(cal: Calendar = Calendar.getInstance(), lazy: Boolean = false, offset: Int = 0, countPerOffset: Int = 5): ArrayList<Receipt> {

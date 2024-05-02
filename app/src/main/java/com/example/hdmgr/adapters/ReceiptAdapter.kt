@@ -2,6 +2,7 @@ package com.example.hdmgr.adapters
 
 import android.content.Context
 import android.content.res.Resources
+import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.MenuInflater
@@ -29,6 +30,7 @@ class ReceiptAdapter(
     var itemList: ArrayList<Receipt>
 ) : RecyclerView.Adapter<ReceiptAdapter.ViewHolder>() {
     val dbOperationManager = DbOperationManager(context)
+    lateinit var onDeleteFinished: OnActionFinished
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view){
         val tvId = view.findViewById<TextView>(R.id.tv_id)
         val tvTitle = view.findViewById<TextView>(R.id.tv_title)
@@ -41,9 +43,14 @@ class ReceiptAdapter(
         val root = view.findViewById<LinearLayout>(R.id.root)
         var tvIndex = view.findViewById<TextView>(R.id.tv_index)
     }
-
+    fun setOnDeleteFinishedListener(onDeleteFinished: OnActionFinished){
+        this.onDeleteFinished = onDeleteFinished
+    }
+    override fun getItemViewType(position: Int): Int {
+        return if (itemList.size > 0) 0 else 1
+    }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return if (itemList.size > 0) ViewHolder(LayoutInflater.from(context).inflate(R.layout.receipt_layout, parent, false)) else ViewHolder(LayoutInflater.from(context).inflate(R.layout.empty_layout, parent, false))
+        return if (viewType == 0) ViewHolder(LayoutInflater.from(context).inflate(R.layout.receipt_layout, parent, false)) else ViewHolder(LayoutInflater.from(context).inflate(R.layout.empty_layout, parent, false))
     }
 
     override fun getItemCount(): Int {
@@ -51,7 +58,7 @@ class ReceiptAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        if(itemList.size > 0){
+        if(itemList.size > 0 && holder.tvIndex != null){
             //init
             val dbOperationManager = DbOperationManager(context)
             val rec = itemList[position]
@@ -123,7 +130,8 @@ class ReceiptAdapter(
                             customAlertDialog.onYesClickAction = {
                                 notifyItemRemoved(position)
                                 itemList.remove(rec)
-                                notifyItemRangeChanged(position, itemList.size - 1)
+                                if(itemList.size != 0)
+                                    notifyItemChanged(0)
                                 dbOperationManager.deleteReceipt(rec.id)
                                 Snackbar.make(holder.root, "Đã xoá hoá đơn số #${rec.id}", Snackbar.LENGTH_SHORT)
                                     .setAction("Hoàn tác"){
@@ -132,7 +140,7 @@ class ReceiptAdapter(
                                         notifyItemInsertedAndRevalidate(position)
                                     }
                                     .show()
-
+                                onDeleteFinished.onFinished(rec)
                             }
                         }
                         R.id.action_edit -> {
@@ -145,8 +153,12 @@ class ReceiptAdapter(
         }
     }
     fun notifyItemInsertedAndRevalidate(position: Int){
-        notifyItemInserted(position)
-        notifyItemRangeChanged(position, itemCount)
+        try {
+            notifyItemInserted(position)
+            notifyItemRangeChanged(position, itemCount)
+        } catch (e: IndexOutOfBoundsException){
+            Log.e("heh", "notifyItemInsertedAndRevalidate: ${e.message}")
+        }
     }
     fun notifyItemRemovedAndRevalidate(position: Int){
         notifyItemRemoved(position)

@@ -9,7 +9,7 @@ class Receipt(
     var noidung: String? = "",
     var fullDateString: String = ""
 ) {
-    lateinit var folder: Folder
+    var folder: Folder = Folder()
     var soTien: Int = 0
         set(value) {
             field = if(value < 0){
