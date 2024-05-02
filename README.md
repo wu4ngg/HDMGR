@@ -9,7 +9,7 @@
 <hr/>
 
 ## Tiến độ
-15%
+25% - Dọn sạch bug tồn động, tạm thời xong CRUD của các hoá đơn (trừ phần cập nhật)
 ## Changelog
 ### 1.1.300424_1354b 
 - Sửa nhiều lỗi liên quan đến hành vi của RecyclerView gây crash ứng dụng.
